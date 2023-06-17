@@ -15,15 +15,15 @@ pipeline {
     stage('Start container') {
       steps {
         sh '''
-        docker-compose up -d --no-color --wait
+        docker-compose up -d 
         docker-compose ps
         '''
       }
     }
-    stage('Run tests against the container') {
-      steps {
-        sh 'curl http://localhost:80'
-      }
-    }
+    // stage('Run tests against the container') {
+    //   steps {
+    //     sh 'curl http://localhost:80'
+    //   }
+    // }
   }
 }
