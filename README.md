@@ -1,4 +1,20 @@
 # Livmo Deployment
+### Project structure:
+
+- server: contains configuration files of server(backEnd)
+- client: contains configuration files of client(frontEnd)
+- docker-compose.yaml: contains configurations to manage multi-container Docker deployment
+- Jenkinsfile: contains jenkins pipeline code for automatic deployent
+
+```
+ Livmo/
+   ├── client/
+   ├── server/
+   ├── README.md
+   ├── docker-compose.yml
+   └── Jenkinsfile         # contains jenkins pipeline code for automatic deployent
+```
+
 ## PreRequisites
 Before you begin this tutorial, ensure the following is installed in EC2 instance:
 -   Node.js (available  [here](https://nodejs.org/)  or via  [nvm](https://github.com/creationix/nvm))
@@ -47,7 +63,7 @@ To use Docker Compose:
 version: '3.8'
 services:
   server:
-    build: .
+    build: ./server
     restart: unless-stopped
     container_name: api_backend
     ports:
@@ -78,18 +94,25 @@ To deploy your Node.js application on an AWS EC2 instance:
 ```bash
 ssh -i "ssh_key.pem" ubuntu@public_ip
 ```
+![Alt text](./readme/ssh.png?raw=true "Optional Title")
+
 3.  Ensure that the instance has all prerequisites installed.
 ```bash
 docker version
 docker info
 docker-compose version
 ```
+![Alt text](./readme/docker_version.png?raw=true "Optional Title")
+![Alt text](./readme/docker_compose.png?raw=true "Optional Title")
+
 if prerequisites are not installed you can follow these documentations to install [Docker](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04) and [Docker-compose](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04).
 
 4.  Clone the code repository.
 ```bash
 git clone <repository_url>
 ```
+![Alt text](./readme/git_clone.png?raw=true "Optional Title")
+
 Replace `<repository_url>` with the URL of your Git repository.
 
 5.  After cloning git repo, navigate to the project directory.
@@ -100,5 +123,8 @@ cd ./Livmo
 ```bash
 docker-compose up -d
 ```
+![Alt text](./readme/compose_up.png?raw=true "Optional Title")
+
+
 This command will build the Docker images and start the containers in the background (`-d` flag).
 After running the command, your Node.js application will be up and running on your AWS EC2 instance.
