@@ -304,6 +304,8 @@ steps to start a Jenkins pipeline job with SCM (Source Code Management) from Git
 
 1. Create a new Jenkins job: Click on "New Item" on the Jenkins dashboard to create a new job. Enter a name for your job and select "Pipeline" as the job type, then click "OK".
 
+![Alt text](./readme/J_pipeline.png?raw=true "jenkins")
+
 2. Configure Git repository: In the job configuration page, scroll down to the "Pipeline" section. Under "Definition", select "Pipeline script from SCM".
 
 3. Select Git as SCM: In the "SCM" section, choose "Git" as the SCM option.
@@ -311,7 +313,10 @@ steps to start a Jenkins pipeline job with SCM (Source Code Management) from Git
 4. Enter the Git repository details: Provide the Git repository URL in the "Repository URL" field. You can use either HTTPS or SSH URL depending on your setup.
 
 5. Save the configuration: Click "Save" to save the job configuration.
+![Alt text](./readme/J_SCM.png?raw=true "jenkins")
 
 **Trigger the pipeline job:** Go back to the Jenkins dashboard and find your job. Click on "Build Now" to trigger the pipeline job.
 Jenkins will now clone your Git repository, checkout the specified branch, and execute the steps defined in the Jenkinsfile as part of the pipeline.
+
+![Alt text](./readme/J_build.png?raw=true "jenkins")
 
