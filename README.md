@@ -33,9 +33,32 @@ Now that we have an overview of the application and the technologies involved, l
 
 ## Launching an EC2 Instance
 The architecture includes Amazon EC2 for the virtual machine and Amazon VPC for the virtual network.
-![Alt text](./readme/architechture.png?raw=true "Optional Title")
+![Alt text](./readme/architechture.png?raw=true "Architecture")
+
+To set up an instance quickly, follow these steps. You'll select the operating system and your key pair, and accept the default values.
+
+1. Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+
+2. In the navigation bar at the top of the screen, the current AWS Region is displayed (for example, US East (N Viginia)). Select a Region in which to launch the instance. 
+
+3. From the Amazon EC2 console dashboard, choose Launch instance.
+
+4. (Optional) Under Name and tags, for Name, enter a descriptive name for your instance like **Livmo**.
+
+5. Under Application and OS Images (Amazon Machine Image), choose Quick Start, and then choose the **Ubuntu Server 20.04 LTS(HVM)**operating system (OS) for your instance.
+![Alt text](./readme/OS.png?raw=true "Operating System")
+
+6. In instance type use t3.xlarge instance (linux pricing 0.1664 $/hr)
+![Alt text](./readme/inst_type.png?raw=true "instance Type")
 
 
+7. Under Key pair (login), for Key pair name, choose an existing key pair or create a new one.(This key pair will be used by you to ssh into isntance)
+
+8. In Network setting, use public subnet and attach security group with port 22 open from internet.
+
+9.
+
+In the Summary panel, choose Launch instance.
 ### Project structure:
 
 - server: contains configuration files of server(backEnd)
