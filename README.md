@@ -254,7 +254,7 @@ After running the command, your Node.js application will be up and running on yo
 ## CI/CD automation using Jenkins
 
 When faced with repetitive technical tasks, finding automation solutions that work can be a chore. With Jenkins, an open-source automation server, you can efficiently manage tasks from building to deploying software. Jenkins is Java-based, installed from Ubuntu packages or by downloading and running its web application archive (WAR) file — a collection of files that make up a complete web application to run on a server.
-#### Installing Jenkins
+#### 1. Installing Jenkins
 The version of Jenkins included with the default Ubuntu packages is often behind the latest available version from the project itself. To ensure you have the latest fixes and features, use the project-maintained packages to install Jenkins.
 
 First, add the repository key to the system:
@@ -273,11 +273,12 @@ sudo apt update
 ```
 Finally, we’ll install Jenkins and its dependencies.
 ```bash
+sudo apt install openjdk-8-jdk
 sudo apt install jenkins
 ```
 Now that Jenkins and its dependencies are in place, we’ll start the Jenkins server.
 
-#### Starting Jenkins
+#### 2. Starting Jenkins
 Let’s start Jenkins by using systemctl:
 ```bash
 sudo systemctl start jenkins
@@ -287,7 +288,30 @@ Since systemctl doesn’t display status output, we’ll use the status command 
 ```bash
 sudo systemctl status jenkins
 ```
+If everything went well, the beginning of the status output shows that the service is active and configured to start at boot:
+
 ![Alt text](./readme/jenkins_status.png?raw=true "sudo systemctl status jenkins")
 
-If everything went well, the beginning of the status output shows that the service is active and configured to start at boot:
+#### 3. Setting up Jenkins
+
+To set up your installation, visit Jenkins on its default port, 8080, using your server domain name or IP address: http://your_server_ip_or_domain:8081
+
+Sign in to Jenkins console by entering credentials.
+![Alt text](./readme/jenkins.png?raw=true "jenkins")
+
+### Start Jenkins pipeline job
+steps to start a Jenkins pipeline job with SCM (Source Code Management) from Git:
+
+1. Create a new Jenkins job: Click on "New Item" on the Jenkins dashboard to create a new job. Enter a name for your job and select "Pipeline" as the job type, then click "OK".
+
+2. Configure Git repository: In the job configuration page, scroll down to the "Pipeline" section. Under "Definition", select "Pipeline script from SCM".
+
+3. Select Git as SCM: In the "SCM" section, choose "Git" as the SCM option.
+
+4. Enter the Git repository details: Provide the Git repository URL in the "Repository URL" field. You can use either HTTPS or SSH URL depending on your setup.
+
+5. Save the configuration: Click "Save" to save the job configuration.
+
+**Trigger the pipeline job:** Go back to the Jenkins dashboard and find your job. Click on "Build Now" to trigger the pipeline job.
+Jenkins will now clone your Git repository, checkout the specified branch, and execute the steps defined in the Jenkinsfile as part of the pipeline.
 
