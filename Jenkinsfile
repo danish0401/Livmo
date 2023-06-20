@@ -15,7 +15,7 @@ pipeline {
     stage('Start container') {
       steps {
         sh '''
-        docker system prune -af
+        sudo docker system prune -af
         docker-compose build
         docker-compose up -d 
         docker-compose ps
