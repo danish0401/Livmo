@@ -54,11 +54,13 @@ To set up an instance quickly, follow these steps. You'll select the operating s
 
 7. Under Key pair (login), for Key pair name, choose an existing key pair or create a new one.(This key pair will be used by you to ssh into isntance)
 
-8. In Network setting, use public subnet and attach security group with port 22 open from internet.
+8. In Network setting, use public subnet and attach security group with port 22,80,3000,8081 open from internet.
 
-9.
 
-In the Summary panel, choose Launch instance.
+*In the Summary panel, choose Launch instance.*
+
+---
+
 ### Project structure:
 
 - server: contains configuration files of server(backEnd)
