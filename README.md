@@ -69,7 +69,50 @@ To connect to your instance using SSH
 ssh -i /path/key-pair-name.pem instance-user-name@instance-public-dns-name
 ```
 ![Alt text](./readme/ssh.png?raw=true "Optional Title")
+
 ---
+
+## Cloning the repository
+lone the code repository containing your Node.js app.
+```bash
+git clone <repository_url>
+```
+![Alt text](./readme/git_clone.png?raw=true "Cloning the repository")
+
+Replace `<repository_url>` with the URL of your Git repository.
+
+#### Project structure:
+
+- server: contains configuration files of server(backEnd)
+- client: contains configuration files of client(frontEnd)
+- docker-compose.yaml: contains configurations to manage multi-container Docker deployment
+- Jenkinsfile: contains jenkins pipeline code for automatic deployent
+
+```
+ Livmo/
+   ├── client/
+   ├── server/
+   ├── README.md
+   ├── docker-compose.yml
+   └── Jenkinsfile         # contains jenkins pipeline code for automatic deployent
+```
+## Installing the Node.js App
+To get node.js, we used the apt package manager. Refresh your local package index first:
+```bash
+sudo apt update
+```
+Then install Node.js:
+```bash
+sudo apt install nodejs
+```
+Check that the install was successful by querying node for its version number:
+```bash
+node -v
+```
+![Alt text](./readme/node_version.png?raw=true "node -v")
+
+---
+
 ## Installing Docker and Docker Compose:
 
 ### Docker
@@ -191,46 +234,6 @@ networks:
 
 ```
 
----
-
-## Cloning the repository
-lone the code repository containing your Node.js app.
-```bash
-git clone <repository_url>
-```
-![Alt text](./readme/git_clone.png?raw=true "Cloning the repository")
-
-Replace `<repository_url>` with the URL of your Git repository.
-
-#### Project structure:
-
-- server: contains configuration files of server(backEnd)
-- client: contains configuration files of client(frontEnd)
-- docker-compose.yaml: contains configurations to manage multi-container Docker deployment
-- Jenkinsfile: contains jenkins pipeline code for automatic deployent
-
-```
- Livmo/
-   ├── client/
-   ├── server/
-   ├── README.md
-   ├── docker-compose.yml
-   └── Jenkinsfile         # contains jenkins pipeline code for automatic deployent
-```
-## Installing the Node.js App
-To get node.js, we used the apt package manager. Refresh your local package index first:
-```bash
-sudo apt update
-```
-Then install Node.js:
-```bash
-sudo apt install nodejs
-```
-Check that the install was successful by querying node for its version number:
-```bash
-node -v
-```
-![Alt text](./readme/node_version.png?raw=true "node -v")
 
 ---
 
@@ -244,3 +247,47 @@ docker-compose up -d
 
 This command will build the Docker images and start the containers in the background (`-d` flag).
 After running the command, your Node.js application will be up and running on your AWS EC2 instance.
+
+---
+---
+
+## CI/CD automation using Jenkins
+
+When faced with repetitive technical tasks, finding automation solutions that work can be a chore. With Jenkins, an open-source automation server, you can efficiently manage tasks from building to deploying software. Jenkins is Java-based, installed from Ubuntu packages or by downloading and running its web application archive (WAR) file — a collection of files that make up a complete web application to run on a server.
+#### Installing Jenkins
+The version of Jenkins included with the default Ubuntu packages is often behind the latest available version from the project itself. To ensure you have the latest fixes and features, use the project-maintained packages to install Jenkins.
+
+First, add the repository key to the system:
+```bash
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+```
+After the key is added the system will return with OK.
+
+Next, let’s append the Debian package repository address to the server’s sources.list:
+```bash
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+```
+After both commands have been entered, we’ll run update so that apt will use the new repository.
+```bash
+sudo apt update
+```
+Finally, we’ll install Jenkins and its dependencies.
+```bash
+sudo apt install jenkins
+```
+Now that Jenkins and its dependencies are in place, we’ll start the Jenkins server.
+
+#### Starting Jenkins
+Let’s start Jenkins by using systemctl:
+```bash
+sudo systemctl start jenkins
+```
+Since systemctl doesn’t display status output, we’ll use the status command to verify that Jenkins started successfully:
+
+```bash
+sudo systemctl status jenkins
+```
+![Alt text](./readme/jenkins_status.png?raw=true "sudo systemctl status jenkins")
+
+If everything went well, the beginning of the status output shows that the service is active and configured to start at boot:
+
