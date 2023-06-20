@@ -59,37 +59,63 @@ To set up an instance quickly, follow these steps. You'll select the operating s
 
 *In the Summary panel, choose Launch instance.*
 
+### Connect to your Linux instance using SSH
+After you launch your instance, you can connect to it and use it the way that you'd use a computer sitting in front of you.
+
+To connect to your instance using SSH
+1. In a terminal window, use the ssh command to connect to the instance. You specify the path and file name of the private key (.pem), the user name for your instance, and the public DNS name or IPv6 address for your instance.
+
+```bash
+ssh -i /path/key-pair-name.pem instance-user-name@instance-public-dns-name
+```
+![Alt text](./readme/ssh.png?raw=true "Optional Title")
 ---
-
-### Project structure:
-
-- server: contains configuration files of server(backEnd)
-- client: contains configuration files of client(frontEnd)
-- docker-compose.yaml: contains configurations to manage multi-container Docker deployment
-- Jenkinsfile: contains jenkins pipeline code for automatic deployent
-
-```
- Livmo/
-   ├── client/
-   ├── server/
-   ├── README.md
-   ├── docker-compose.yml
-   └── Jenkinsfile         # contains jenkins pipeline code for automatic deployent
-```
-
-## PreRequisites
-Before you begin this tutorial, ensure the following is installed in EC2 instance:
--   Node.js (available  [here](https://nodejs.org/)  or via  [nvm](https://github.com/creationix/nvm))
--   [Docker](https://www.docker.com/get-started)
--  Docker-compose
+## Installing Docker and Docker Compose:
 
 ### Docker
+
 Docker is an open-source platform that allows you to automate the deployment of applications inside containers. Containers provide a lightweight, isolated environment for running applications with their dependencies.
-To get started with Docker:
 
-1. Install Docker on your local machine by following the instructions for your operating system. You can find the installation files and detailed guides on the [Docker website](https://www.docker.com/get-started).
+The Docker installation package available in the official Ubuntu repository may not be the latest version. To ensure we get the latest version, we’ll install Docker from the official Docker repository. To do that, we’ll add a new package source, add the GPG key from Docker to ensure the downloads are valid, and then install the package.
 
-2. Once Docker is installed, you can use the Docker CLI (Command Line Interface) to manage containers, build images, and more. Docker uses a Dockerfile, which is a text file that contains instructions to build a Docker image.
+First, update your existing list of packages:
+
+```bash
+sudo apt update
+```
+Next, install a few prerequisite packages which let apt use packages over HTTPS:
+```bash
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+```
+Then add the GPG key for the official Docker repository to your system:
+```bash
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+```
+Add the Docker repository to APT sources:
+```bash
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+```
+This will also update our package database with the Docker packages from the newly added repo.
+
+Make sure you are about to install from the Docker repo instead of the default Ubuntu repo:
+```bash
+apt-cache policy docker-ce
+```
+Finally, install Docker:
+```bash
+sudo apt install docker-ce
+```
+Docker should now be installed, the daemon started, and the process enabled to start on boot. Check that it’s running:
+```bash
+sudo systemctl status docker
+```
+![Alt text](./readme/docker.png?raw=true "sudo systemctl status docker")
+Installing Docker now gives you not just the Docker service (daemon) but also the docker command line utility, or the Docker client.
+
+Now add your username to the docker group:
+```bash
+sudo usermod -aG docker ${USER}
+```
 
 #### Dockerfile
 
@@ -111,15 +137,33 @@ CMD  ["node",  "server.js"]
 ```
 
 You can create a similar Dockerfile for the client directory, customizing it according to your requirements.
+
+
 ### Docker Compose
 
 Docker Compose is a tool that allows you to define and manage multi-container Docker applications. It uses a YAML file (docker-compose.yaml) to configure the services, networks, and volumes required for your application.
 
+The following command will download the 1.29.2 release and save the executable file at /usr/local/bin/docker-compose, which will make this software globally accessible as docker-compose:
+
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```
+Next, set the correct permissions so that the docker-compose command is executable:
+
+```bash
+sudo chmod +x /usr/local/bin/docker-compose
+```
+To verify that the installation was successful, you can run:
+```bash
+docker-compose --version
+```
+![Alt text](./readme/docker_compose.png?raw=true "docker-compose version")
+
 To use Docker Compose:
 
-1.  Create a file named `docker-compose.yaml` in the root directory of your project.
+1.  We have a file named `docker-compose.yaml` in the root directory of our project.
     
-2.  In the `docker-compose.yaml` file, define the services for your client and server containers. Here's an example:
+2.  In the `docker-compose.yaml` file, defined the services for our client and server containers. Here's an example:
 
 ```yml
 version: '3.8'
@@ -147,44 +191,55 @@ networks:
 
 ```
 
-## Deployment on AWS EC2
+---
 
-The architecture includes Amazon EC2 for the virtual machine and Amazon VPC for the virtual network. To give you a working project out of the box that you can customize easily and extend to suit your needs.
-1.  Set up an EC2 instance on AWS by following the appropriate [documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-instance-wizard.html). 
-2.  Connect to your EC2 instance using SSH.
-```bash
-ssh -i "ssh_key.pem" ubuntu@public_ip
-```
-![Alt text](./readme/ssh.png?raw=true "Optional Title")
-
-3.  Ensure that the instance has all prerequisites installed.
-```bash
-docker version
-docker info
-docker-compose version
-```
-![Alt text](./readme/docker_version.png?raw=true "Optional Title")
-![Alt text](./readme/docker_compose.png?raw=true "Optional Title")
-
-if prerequisites are not installed you can follow these documentations to install [Docker](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04) and [Docker-compose](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04).
-
-4.  Clone the code repository.
+## Cloning the repository
+lone the code repository containing your Node.js app.
 ```bash
 git clone <repository_url>
 ```
-![Alt text](./readme/git_clone.png?raw=true "Optional Title")
+![Alt text](./readme/git_clone.png?raw=true "Cloning the repository")
 
 Replace `<repository_url>` with the URL of your Git repository.
 
-5.  After cloning git repo, navigate to the project directory.
+#### Project structure:
+
+- server: contains configuration files of server(backEnd)
+- client: contains configuration files of client(frontEnd)
+- docker-compose.yaml: contains configurations to manage multi-container Docker deployment
+- Jenkinsfile: contains jenkins pipeline code for automatic deployent
+
+```
+ Livmo/
+   ├── client/
+   ├── server/
+   ├── README.md
+   ├── docker-compose.yml
+   └── Jenkinsfile         # contains jenkins pipeline code for automatic deployent
+```
+## Installing the Node.js App
+To get node.js, we used the apt package manager. Refresh your local package index first:
 ```bash
-cd ./Livmo
-```    
-6.  Build and start the Docker containers using Docker Compose with the following command:
+sudo apt update
+```
+Then install Node.js:
+```bash
+sudo apt install nodejs
+```
+Check that the install was successful by querying node for its version number:
+```bash
+node -v
+```
+![Alt text](./readme/node_version.png?raw=true "node -v")
+
+---
+
+## Running the Application
+With the docker-compose.yml file in place, we can now execute Docker Compose to bring our environment up. The following command will download the necessary Docker images, create a container for the web service, and run the containerized environment in background mode:
 ```bash
 docker-compose up -d
 ```
-![Alt text](./readme/compose_up.png?raw=true "Optional Title")
+![Alt text](./readme/compose_up.png?raw=true "docker-compose up -d")
 
 
 This command will build the Docker images and start the containers in the background (`-d` flag).
