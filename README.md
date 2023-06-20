@@ -47,28 +47,26 @@ To use Docker Compose:
 version: '3.8'
 services:
   server:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     restart: unless-stopped
     container_name: api_backend
     ports:
       - '3000:3000'
-    network:
-	  - shared-network
+    networks:
+      - shared-network
   client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
+    stdin_open: true
+    build: ./client
     container_name: app_frontend
     ports:
       - '80:3000'
     networks:
-	  - shared-network
-	depends_on:
-	  - server
+      - shared-network
+    depends_on:
+      - server
 networks:
   shared-network:
+
 ```
 
 ## Deployment on AWS EC2
@@ -87,6 +85,7 @@ docker info
 docker-compose version
 ```
 if prerequisites are not installed you can follow these documentations to install [Docker](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04) and [Docker-compose](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04).
+
 4.  Clone the code repository.
 ```bash
 git clone <repository_url>
@@ -97,7 +96,7 @@ Replace `<repository_url>` with the URL of your Git repository.
 ```bash
 cd ./Livmo
 ```    
-7.  Build and start the Docker containers using Docker Compose with the following command:
+6.  Build and start the Docker containers using Docker Compose with the following command:
 ```bash
 docker-compose up -d
 ```
