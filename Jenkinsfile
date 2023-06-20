@@ -25,11 +25,5 @@ pipeline {
         sh 'curl -I http://localhost:80'
       }
     }
-    stage('stop containers'){
-      steps {
-        sh 'docker-compose down --remove-orphans -v'
-        sh 'docker-compose ps'
-        }
-    }
   }
 }
